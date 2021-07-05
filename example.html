@@ -1,0 +1,39 @@
+<html>
+<body>
+
+<canvas id="c"></canvas>
+
+<script type="text/javascript" src="rectpack.js"></script>
+<script type="text/javascript">
+	let rp = new RectPack(512, 512);
+
+	let canvas = document.getElementById('c');
+	let ctx = canvas.getContext('2d');
+	canvas.width = rp.width;
+	canvas.height = rp.height;
+	ctx.fillStyle = '#000';
+	ctx.fillRect(0, 0, rp.width, rp.height);
+
+	let timeStart = performance.now();
+	let i = 0;
+	while (true) {
+		let w = ((Math.random()*32 + 1)|0);
+		let h = ((Math.random()*32 + 1)|0);
+
+		// RectPack.insert() returns null or an object with {x, y} of the
+		// packed position of the rect
+		let packed = rp.insert(w, h);
+		if (!packed) {
+			break;
+		}
+
+		i++;
+		ctx.fillStyle = "#" + ((1<<24)*Math.random() | 0).toString(16);
+		ctx.fillRect(packed.x, packed.y, w, h);
+	}
+	ctx.fillStyle = '#fff'
+	ctx.fillText('packed ' + i + ' rects in ' + (performance.now() - timeStart) + 'ms', 4, canvas.height - 4);
+</script>
+
+</body>
+</html>
